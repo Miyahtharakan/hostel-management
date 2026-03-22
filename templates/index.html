@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HostelHub — Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='hm.css') }}">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <div class="logo-icon">🏠</div>
+      <div>
+        <div class="logo-text">HostelHub</div>
+        <div class="logo-sub">Management System</div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <button class="nav-item active" onclick="showPage('dashboard', this)">
+      <span class="nav-icon">📊</span> Dashboard
+    </button>
+    <button class="nav-item" onclick="showPage('rooms', this)">
+      <span class="nav-icon">🚪</span> Room Management
+    </button>
+    <button class="nav-item" onclick="showPage('students', this)">
+      <span class="nav-icon">👥</span> Students
+    </button>
+
+    <div class="nav-section-label">Finance</div>
+    <button class="nav-item" onclick="showPage('fees', this)">
+      <span class="nav-icon">💳</span> Fees & Payments
+    </button>
+
+    <div class="nav-section-label">Support</div>
+    <button class="nav-item" onclick="showPage('complaints', this)">
+      <span class="nav-icon">🔧</span> Complaints
+      <span class="nav-badge">4</span>
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="user-avatar">AK</div>
+      <div>
+        <div class="user-name">Admin Kumar</div>
+        <div class="user-role">Hostel Manager</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="page-title" id="pageTitle">Dashboard</div>
+      <div class="page-subtitle" id="pageSubtitle">Welcome back, Admin Kumar</div>
+    </div>
+    <div class="topbar-actions">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" placeholder="Search students, rooms…">
+      </div>
+      <div class="icon-btn">
+        🔔<span class="notif-dot"></span>
+      </div>
+      <div class="icon-btn">⚙️</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ===== DASHBOARD ===== -->
+    <div class="page active" id="page-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:#e8f4ee">🏠</div>
+            <span class="stat-trend trend-up">+2 this week</span>
+          </div>
+          <div class="stat-value" id="totalRooms">86</div>
+          <div class="stat-label">Total Rooms</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:#eff6ff">👥</div>
+            <span class="stat-trend trend-up">+12 this month</span>
+          </div>
+          <div class="stat-value" id="totalStudents">0</div>
+          <div class="stat-label">Total Students</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:#fffbeb">💰</div>
+            <span class="stat-trend trend-up">+8%</span>
+          </div>
+          <div class="stat-value">₹2.4L</div>
+          <div class="stat-label">Monthly Revenue</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:#fdf0ec">🔧</div>
+            <span class="stat-trend trend-down">4 pending</span>
+          </div>
+          <div class="stat-value">4</div>
+          <div class="stat-label">Open Complaints</div>
+        </div>
+      </div>
+
+      <div class="grid-3-1">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Monthly Fee Collection</div>
+              <div class="card-subtitle">Last 6 months overview</div>
+            </div>
+            <span class="badge badge-green"><span class="badge-dot"></span>On Track</span>
+          </div>
+          <div class="mini-chart">
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:55%"></div><div class="chart-label">Oct</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:70%"></div><div class="chart-label">Nov</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:60%"></div><div class="chart-label">Dec</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:85%"></div><div class="chart-label">Jan</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:75%"></div><div class="chart-label">Feb</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar highlight" style="height:92%"></div><div class="chart-label">Mar</div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+        <div>
+        <div style="font-size:12px;color:var(--text-muted)">Collected</div>
+        <div id="feesCollected" style="font-weight:700;font-size:15px">₹0</div>
+        </div>
+
+        <div>
+        <div style="font-size:12px;color:var(--text-muted)">Pending</div>
+        <div id="feesPending" style="font-weight:700;font-size:15px;color:var(--yellow)">₹0</div>
+        </div>
+
+       <div>
+       <div style="font-size:12px;color:var(--text-muted)">Overdue</div>
+       <div id="feesOverdue" style="font-weight:700;font-size:15px;color:var(--red)">₹0</div>
+       </div>
+</div>
+
+        </div>
+</div>
+
+<div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Occupancy</div>
+              <div class="card-subtitle">Current status</div>
+            </div>
+          </div>
+          <div class="ring-wrap">
+            <div>
+              <svg width="110" height="110" viewBox="0 0 110 110">
+                <circle cx="55" cy="55" r="42" fill="none" stroke="#e8e5de" stroke-width="10"/>
+                <circle cx="55" cy="55" r="42" fill="none" stroke="#2d6a4f" stroke-width="10" stroke-dasharray="263.9" stroke-dashoffset="39.6"
+                  stroke-linecap="round" transform="rotate(-90 55 55)"/>
+              </svg>
+              <div style="position:relative;margin-top:-80px;text-align:center;height:50px;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                <div class="ring-pct">85%</div>
+              </div>
+              <div style="height:30px"></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="donut-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Occupied (73)</div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--border)"></div>Vacant (13)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 16px;">
+        <div class="card-header">
+          <div class="card-title">Recent Activity</div>
+        </div>
+        <div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--accent)"></div>
+            <div><div class="activity-text">Room 108-A checked in by <strong>Rahul Kumar</strong></div><div class="activity-time">2 hours ago</div></div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--yellow)"></div>
+            <div><div class="activity-text">Fee overdue reminder sent to <strong>5 students</strong></div><div class="activity-time">4 hours ago</div></div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--red)"></div>
+            <div><div class="activity-text">Complaint raised for <strong>Room 108 — Water leak</strong></div><div class="activity-time">6 hours ago</div></div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--blue)"></div>
+            <div><div class="activity-text">Room 115 marked for <strong>maintenance</strong></div><div class="activity-time">Yesterday</div></div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--accent)"></div>
+            <div><div class="activity-text">₹12,500 payment received from <strong>Priya Mehta</strong></div><div class="activity-time">Yesterday</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ROOMS ===== -->
+    <div class="page" id="page-rooms">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Room Management</div>
+          <div class="section-sub">86 total rooms across 4 blocks</div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:16px">
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:16px">Block Occupancy</div>
+    <div id="blockOccupancy"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:16px">Room Type Summary</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Total</th>
+          <th>Occupied</th>
+          <th>Vacant</th>
+        </tr>
+      </thead>
+
+      <tbody id="roomTypeTable">
+      </tbody>
+
+    </table>
+  </div>
+
+</div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Room Overview — Block A</div>
+          <div class="filter-row" style="margin-bottom:0">
+            <span class="filter-chip active">All</span>
+            <span class="filter-chip active" onclick="filterRooms(this,'all')">All</span>
+            <span class="filter-chip" onclick="filterRooms(this,'occupied')">Occupied</span>
+            <span class="filter-chip" onclick="filterRooms(this,'vacant')">Vacant</span>
+            <span class="filter-chip" onclick="filterRooms(this,'maintenance')">Maintenance</span>
+          </div>
+        </div>
+        <div class="room-grid" id="roomGrid">
+          <!-- dynamically generated -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STUDENTS ===== -->
+    <div class="page" id="page-students">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Student Management</div>
+          <div class="section-sub"> students currently enrolled</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('addStudentModal')">＋ Add Student</button>
+      </div>
+
+      <div class="card" style="margin-bottom: 16px;">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Recent Admissions</div>
+            <div class="card-subtitle">Last 5 check-ins</div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="showPage('students', document.querySelector('[onclick*=students]'))">View All</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Student</th><th>Room</th><th>Date</th><th>Status</th>
+            </tr></thead>
+            <tbody>
+              <tr>
+                <td><div class="avatar-cell"><div class="avatar" style="background:#2d6a4f">RK</div><div><div class="avatar-name">Rahul Kumar</div><div class="avatar-detail">MBA</div></div></div></td>
+                <td><span class="tag">108-A</span></td>
+                <td style="color:var(--text-muted);font-size:12px">Mar 6, 2026</td>
+                <td><span class="badge badge-green"><span class="badge-dot"></span>Active</span></td>
+              </tr>
+              <tr>
+                <td><div class="avatar-cell"><div class="avatar" style="background:#3b82f6">PM</div><div><div class="avatar-name">Priya Mehta</div><div class="avatar-detail">MBA Finance</div></div></div></td>
+                <td><span class="tag">215-B</span></td>
+                <td style="color:var(--text-muted);font-size:12px">Mar 5, 2026</td>
+                <td><span class="badge badge-green"><span class="badge-dot"></span>Active</span></td>
+              </tr>
+              <tr>
+                <td><div class="avatar-cell"><div class="avatar" style="background:#7c3aed">AS</div><div><div class="avatar-name">Arjun Sharma</div><div class="avatar-detail">M.Sc Physics</div></div></div></td>
+                <td><span class="tag">412-D</span></td>
+                <td style="color:var(--text-muted);font-size:12px">Mar 4, 2026</td>
+                <td><span class="badge badge-yellow"><span class="badge-dot"></span>Pending</span></td>
+              </tr>
+              <tr>
+                <td><div class="avatar-cell"><div class="avatar" style="background:#e76f51">NP</div><div><div class="avatar-name">Neha Patel</div><div class="avatar-detail">B.Com</div></div></div></td>
+                <td><span class="tag">301-C</span></td>
+                <td style="color:var(--text-muted);font-size:12px">Mar 3, 2026</td>
+                <td><span class="badge badge-green"><span class="badge-dot"></span>Active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="tabs" style="flex:1;max-width:400px;margin:0">
+            <button class="tab active" onclick="filterStudents('all',this)">All Students</button>
+            <button class="tab" onclick="filterStudents('active',this)">Active</button>
+            <button class="tab" onclick="filterStudents('pending',this)">Pending</button>
+            <button class="tab" onclick="filterStudents('alumni',this)">Alumni</button>
+          </div>
+          <div class="search-box" style="width:200px">
+            <span>🔍</span>
+            <input type="text" placeholder="Search…" oninput="searchStudents(this.value)">
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Student</th><th>Room</th><th>Course</th><th>Phone</th><th>Fees</th><th>Status</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="studentTableBody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FEES ===== -->
+    <div class="page" id="page-fees">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Fees & Payments</div>
+          <div class="section-sub">March 2026 billing cycle</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('addPaymentModal')">＋ Record Payment</button>
+      </div>
+
+      
+
+      <div class="grid-2">
+        <div class="card">
+  <div class="card-header">
+    <div class="card-title">Recent Transactions</div>
+    <span class="badge badge-green">
+      <span class="badge-dot"></span>Live
+    </span>
+  </div>
+
+  <div id="paymentList"></div>
+
+</div>
+        </div>
+  </div>
+
+    <!-- ===== COMPLAINTS ===== -->
+    <div class="page" id="page-complaints">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Complaints & Maintenance</div>
+          <div class="section-sub">4 open issues require attention</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('addComplaintModal')">＋ New Complaint</button>
+      </div>
+
+      <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--red-light);margin-bottom:10px">🚨</div>
+          <div class="stat-value" style="font-size:20px;color:var(--red)">2</div>
+          <div class="stat-label">High Priority</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--yellow-light);margin-bottom:10px">⚠️</div>
+          <div class="stat-value" style="font-size:20px;color:var(--yellow)">2</div>
+          <div class="stat-label">Medium Priority</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--accent-light);margin-bottom:10px">✅</div>
+          <div class="stat-value" style="font-size:20px;color:var(--accent)">18</div>
+          <div class="stat-label">Resolved (March)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--blue-light);margin-bottom:10px">⏱️</div>
+          <div class="stat-value" style="font-size:20px;color:var(--blue)">1.4d</div>
+          <div class="stat-label">Avg Resolution Time</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Open Complaints</div>
+            <div class="filter-row" style="margin:0">
+              <span class="filter-chip active">All</span>
+              <span class="filter-chip">Plumbing</span>
+              <span class="filter-chip">Electrical</span>
+            </div>
+          </div>
+          <div id="complaintList">
+            <div class="complaint-item">
+              <div class="complaint-top">
+                <div class="complaint-title">Water Leakage — Bathroom</div>
+                <span class="badge badge-red">Open</span>
+              </div>
+              <div class="complaint-desc">Continuous water dripping from bathroom ceiling pipe causing flooding near toilet area.</div>
+              <div class="complaint-meta">
+                <span>🚪 Room 108-A</span>
+                <span>👤 Rahul Kumar</span>
+                <span class="priority-high">● High</span>
+                <span>Mar 6, 2026</span>
+                <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="resolveComplaint(this)">Mark Resolved</button>
+              </div>
+            </div>
+            <div class="complaint-item">
+              <div class="complaint-top">
+                <div class="complaint-title">Power Outlet Not Working</div>
+                <span class="badge badge-yellow">In Progress</span>
+              </div>
+              <div class="complaint-desc">The 2 power outlets near the study desk have stopped working completely.</div>
+              <div class="complaint-meta">
+                <span>🚪 Room 215-B</span>
+                <span>👤 Priya Mehta</span>
+                <span class="priority-medium">● Medium</span>
+                <span>Mar 5, 2026</span>
+                <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="resolveComplaint(this)">Mark Resolved</button>
+              </div>
+            </div>
+            <div class="complaint-item">
+              <div class="complaint-top">
+                <div class="complaint-title">AC Not Cooling</div>
+                <span class="badge badge-red">Open</span>
+              </div>
+              <div class="complaint-desc">Air conditioner runs but doesn't cool the room. Temperature consistently stays above 28°C.</div>
+              <div class="complaint-meta">
+                <span>🚪 Room 301-C</span>
+                <span>👤 Neha Patel</span>
+                <span class="priority-high">● High</span>
+                <span>Mar 4, 2026</span>
+                <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="resolveComplaint(this)">Mark Resolved</button>
+              </div>
+            </div>
+            <div class="complaint-item">
+              <div class="complaint-top">
+                <div class="complaint-title">Broken Window Latch</div>
+                <span class="badge badge-yellow">In Progress</span>
+              </div>
+              <div class="complaint-desc">Window latch is broken and cannot be locked securely. Security concern.</div>
+              <div class="complaint-meta">
+                <span>🚪 Room 412-D</span>
+                <span>👤 Arjun Sharma</span>
+                <span class="priority-medium">● Medium</span>
+                <span>Mar 3, 2026</span>
+                <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="resolveComplaint(this)">Mark Resolved</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== MODALS ===== -->
+
+<!-- Add Room -->
+<div class="modal-overlay" id="addRoomModal">
+  <div class="modal">
+    <div class="modal-title">Add New Room</div>
+    <div class="modal-sub">Fill in room details to add it to the system</div>
+    <div class="form-grid">
+      <div class="form-row"><label class="form-label">Room Number</label><input class="form-input" placeholder="e.g. 201-A"></div>
+      <div class="form-row"><label class="form-label">Block</label>
+        <select class="form-input"><option>Block A</option><option>Block B</option><option>Block C</option><option>Block D</option></select>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="form-row"><label class="form-label">Room Type</label>
+        <select class="form-input"><option>Single</option><option>Double</option><option>Triple</option><option>Suite</option></select>
+      </div>
+      <div class="form-row"><label class="form-label">Floor</label>
+        <select class="form-input"><option>Ground</option><option>1st</option><option>2nd</option><option>3rd</option><option>4th</option></select>
+      </div>
+    </div>
+    <div class="form-row"><label class="form-label">Monthly Rent (₹)</label><input class="form-input" placeholder="e.g. 8500" type="number"></div>
+    <div class="form-row"><label class="form-label">Amenities</label><input class="form-input" placeholder="AC, Wi-Fi, Attached Bath…"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('addRoomModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('addRoomModal')">Add Room</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Student -->
+<div class="modal-overlay" id="addStudentModal">
+  <div class="modal">
+
+    <div class="modal-title">Add New Student</div>
+    <div class="modal-sub">Register a new student to the hostel</div>
+
+    <div class="form-row">
+      <label class="form-label">Full Name</label>
+      <input id="studentName" class="form-input" placeholder="Student name">
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">Course</label>
+      <input id="studentCourse" class="form-input" placeholder="e.g. B.Tech CSE">
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">Phone</label>
+      <input id="studentPhone" class="form-input" placeholder="+91 9876543210" type="tel">
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">Assign Room</label>
+      <select id="studentRoom" class="form-input">
+        <option>Select room...</option>
+      </select>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('addStudentModal')">
+        Cancel
+      </button>
+
+      <button class="btn btn-primary" onclick="addStudent()">
+        Register Student
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Add Payment -->
+<div class="modal-overlay" id="addPaymentModal">
+  <div class="modal">
+    <div class="modal-title">Record Payment</div>
+    <div class="modal-sub">Log a fee payment for a student</div>
+    <div class="form-row"><label class="form-label">Student</label>
+      <select id="paymentStudent" class="form-input">
+        <option>Loading students...</option>
+      </select>
+    </div>
+    <div class="form-grid">
+      <div class="form-row"><label class="form-label">Amount (₹)</label><input id="paymentAmount" class="form-input" placeholder="e.g. 8500" type="number"></div>
+      <div class="form-row"><label class="form-label">Payment Mode</label>
+        <select class="form-input"><option>UPI</option><option>Bank Transfer</option><option>Cash</option><option>Cheque</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+<label class="form-label">Status</label>
+
+<select id="paymentStatus" class="form-input">
+<option value="paid">Paid</option>
+<option value="pending">Pending</option>
+<option value="overdue">Overdue</option>
+</select>
+
+</div>
+    <div class="form-grid">
+      <div class="form-row"><label class="form-label">Payment For</label>
+        <select class="form-input"><option>Monthly Rent</option><option>Security Deposit</option><option>Mess Fee</option><option>Fine</option></select>
+      </div>
+      <div class="form-row"><label class="form-label">Date</label><input class="form-input" type="date"></div>
+    </div>
+    <div class="form-row"><label class="form-label">Transaction ID</label><input class="form-input" placeholder="Optional"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('addPaymentModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addPayment()">
+        Record Payment
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Complaint -->
+<div class="modal-overlay" id="addComplaintModal">
+  <div class="modal">
+    <div class="modal-title">Raise New Complaint</div>
+    <div class="modal-sub">Submit a maintenance or grievance complaint</div>
+    <div class="form-row"><label class="form-label">Complaint Title</label><input  id="complaintTitle" class="form-input" placeholder="Brief title of the issue"></div>
+    <div class="form-grid">
+      <div class="form-row"><label class="form-label">Room</label><input id="complaintRoom" class="form-input" placeholder="e.g. 204-A"></div>
+      <div class="form-row"><label class="form-label">Category</label>
+        <select class="form-input"><option>Plumbing</option><option>Electrical</option><option>Furniture</option><option>HVAC</option><option>Other</option></select>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="form-row"><label class="form-label">Priority</label>
+        <select id="complaintPriority" class="form-input"><option>High</option><option>Medium</option><option>Low</option></select>
+      </div>
+      <div class="form-row"><label class="form-label">Reported By</label><input id="complaintStudent" class="form-input" placeholder="Student name"></div>
+    </div>
+    <div class="form-row"><label class="form-label">Description</label><textarea  id="complaintDesc" class="form-input" rows="3" placeholder="Describe the issue in detail…" style="resize:vertical"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('addComplaintModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addComplaint()">
+  Submit Complaint
+</button>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='hm.js') }}"></script>
+</body>
+</html>
