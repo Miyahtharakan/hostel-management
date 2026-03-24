@@ -272,7 +272,7 @@ async function loadRecentPayments(){
  <div class="payment-item">
 
    <div>
-     <div class="payment-name">${p.student}</div>
+     <div class="payment-name">${p.name}</div>
      <div class="payment-room">
        ${p.payment_date || ""}
      </div>
