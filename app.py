@@ -193,16 +193,31 @@ def add_payment():
     db = get_db()
     cursor = db.cursor()
 
+    #  Step 1: get student_id from name
+    cursor.execute(
+        "SELECT id FROM students WHERE name=%s",
+        (data["student"],)
+    )
+
+    result = cursor.fetchone()
+
+    if not result:
+        return jsonify({"error": "Student not found"})
+
+    student_id = result[0]
+
+    # Step 2: insert using student_id
     cursor.execute("""
-        INSERT INTO payments (student, amount, payment_date, status)
+        INSERT INTO payments (student_id, amount, payment_date, status)
         VALUES (%s,%s,CURDATE(),%s)
     """, (
-        data["student"],
+        student_id,
         data["amount"],
         data["status"]
     ))
 
     db.commit()
+
     cursor.close()
     db.close()
 
@@ -214,18 +229,19 @@ def recent_payments():
     cursor = db.cursor(dictionary=True)
 
     cursor.execute("""
-        SELECT student, amount, payment_date, status
+        SELECT students.name, payments.amount, payments.payment_date, payments.status
         FROM payments
-        ORDER BY id DESC
+        JOIN students ON payments.student_id = students.id
+        ORDER BY payments.id DESC
         LIMIT 5
     """)
 
-    data = cursor.fetchall()
+    payments = cursor.fetchall()
 
     cursor.close()
     db.close()
 
-    return jsonify(data)
+    return jsonify(payments)
 
 @app.route("/fee_stats")
 def fee_stats():
